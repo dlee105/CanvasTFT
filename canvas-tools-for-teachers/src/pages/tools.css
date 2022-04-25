@@ -1,0 +1,277 @@
+/* Stylesheets for all tools provided on the platform */
+/* Organized by class name */
+
+
+/* DISCUSSION FINDER */
+
+.DiscussionFinder {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    margin-top: -1%;
+    background-color: #FFFFFF;
+}
+
+.DiscussionFinder h1 {
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 69px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.DiscussionFinder h2 {
+    font-weight: 400;
+    font-size: 32px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+  }
+
+.DiscussionFinder h3 {
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 33px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.DiscussionFinder p, .nav-link {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+@media (max-width: 768px) {
+
+    [class*="col-"] {
+        margin-bottom: 15px;
+    }
+}
+
+.DiscussionFinder img {
+    margin-bottom: 4%;
+    width: 100%;
+}
+
+
+.DiscussionFinder .card {
+    padding: 4%;
+    border-radius: 20px;
+    margin-top: 4%;
+    margin-bottom: 6%;
+    background-color: #f1f1f1;
+}
+
+.DiscussionFinder .nav-pills .nav-link.active {
+    background-color: black;
+    border-radius: 20px;
+}
+/* 
+@media (min-width: 1200px) {
+    .DiscussionFinder .card .container {
+      width: 700px;
+    }
+  } */
+
+
+
+
+
+
+/* PEER REVIEW ANALYTICS */
+
+.PeerReview {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    margin-top: -1%;
+    background-color: #FFFFFF;
+}
+
+.PeerReview h1 {
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 69px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.PeerReview h2 {
+    font-weight: 400;
+    font-size: 32px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+  }
+
+.PeerReview h3 {
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 33px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.PeerReview p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+@media (max-width: 768px) {
+
+    [class*="col-"] {
+        margin-bottom: 15px;
+    }
+}
+
+.PeerReview img {
+    margin-bottom: 4%;
+    width: 100%;
+}
+
+
+.PeerReview .card {
+    padding: 4%;
+    border-radius: 20px;
+    margin-top: 4%;
+    margin-bottom: 6%;
+    background-color: #eeeeee;
+}
+
+
+
+
+/* AVERAGE BY GRADER */
+
+.AverageByGrader {
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    margin-top: -1%;
+    background-color: #FFFFFF;
+}
+
+.AverageByGrader h1 {
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 69px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.AverageByGrader h2 {
+    font-weight: 400;
+    font-size: 32px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+  }
+
+.AverageByGrader h3 {
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 33px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.AverageByGrader p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+@media (max-width: 768px) {
+
+    [class*="col-"] {
+        margin-bottom: 15px;
+    }
+}
+
+.AverageByGrader img {
+    margin-bottom: 4%;
+    width: 100%;
+}
+
+
+.AverageByGrader .card {
+    padding: 4%;
+    border-radius: 20px;
+    margin-top: 4%;
+    margin-bottom: 6%;
+    background-color: #eeeeee;
+}
+
+.AverageByGrader #visualization {
+    padding: 4%;
+}
+
+
+
+/* STUDENT GROUPING */
+
+.StudentGroupGenerator{
+    padding-left: 2%;
+    padding-right: 2%;
+    padding-bottom: 2%;
+    margin-top: -1%;
+    background-color: #FFFFFF;
+}
+
+.StudentGroupGenerator h1 {
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 69px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.StudentGroupGenerator h2 {
+    font-weight: 400;
+    font-size: 32px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+  }
+
+.StudentGroupGenerator h3 {
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 33px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.StudentGroupGenerator p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+@media (max-width: 768px) {
+
+    [class*="col-"] {
+        margin-bottom: 15px;
+    }
+}
+
+.StudentGroupGenerator img {
+    margin-bottom: 4%;
+    width: 100%;
+}
+
+
+.StudentGroupGenerator .card {
+    padding: 4%;
+    border-radius: 20px;
+    margin-top: 4%;
+    margin-bottom: 6%;
+    background-color: #eeeeee;
+}
+

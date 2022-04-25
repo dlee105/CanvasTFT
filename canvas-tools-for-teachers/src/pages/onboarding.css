@@ -1,0 +1,341 @@
+/* Stylesheets for all onboarding-related pages, including the following classes: 
+    "Start", "Getting Started", "Invalid Login", "Login" */
+
+/* Organized by class name */
+
+
+
+
+/* START */
+
+.Start {
+    padding: 4%;
+}
+
+.Start h4 {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.Start #headline {
+    font-weight: 500;
+    font-size: 54px;
+    line-height: 82px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.Start #logo {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 36px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+img {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.btn-primary {
+    background-color: black;
+    border-radius: 300px;
+    border-color: black;
+    font-family: 'Poppins', sans-serif;
+    margin: 1%;
+    padding: 4%;
+    /* default font size = 20px */
+}
+
+.btn-outline-primary {
+    border-color: black;
+    color: black;
+    border-radius: 300px;
+    font-family: 'Poppins', sans-serif;
+    margin: 1%;
+    padding: 4%;
+    /* default font size = 20px */
+}
+
+.btn-primary:hover, .btn-primary:active {
+    background-color: black;
+    opacity: 50%;
+    border-color: black;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:active {
+    background-color: #808080;
+    border-color: #808080;
+}
+
+@media (min-width: 1200px) {
+    .Start .container {
+      width: 700px;
+    }
+  }
+
+
+
+
+
+/* GETTING STARTED */
+
+.GettingStarted {
+    padding: 4%;
+    background-color: #F0F0F0;
+}
+
+.GettingStarted h1 {
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 69px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.GettingStarted h2 {
+    font-weight: 400;
+    font-size: 32px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+  }
+
+.GettingStarted h3 {
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 33px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.GettingStarted p {
+    font-weight: 400;
+    font-size: 18px;
+    line-height: 28px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.GettingStarted #logo {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 36px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+@media (min-width: 1200px) {
+  .GettingStarted #cards .container {
+    width: 950px;
+  }
+}
+
+@media (min-width: 1200px) {
+    .GettingStarted .container {
+      width: 600px;
+    }
+  }
+
+.GettingStarted .card {
+    padding: 6%;
+    background-color: #ffffff;
+    border-radius: 20px;
+    outline-color: none;
+    margin-bottom: 4%;
+}
+
+.GettingStarted .card-header {
+  border-radius: 300px;
+  border-color: rgb(255, 255, 255);
+  padding: 2%;
+  /* width: 30%; */
+  width: 100%;
+  background-color: #F4F1DE;
+}
+
+.GettingStarted .btn {
+  padding: 2%;
+}
+
+.GettingStarted input {
+  width: 100%;
+  display: block;
+  padding: 2%;
+  margin: 1%;
+  border-radius: 300px;
+  border-color: black;
+  font-family: 'Poppins', sans-serif;
+  font-size: 18px;
+  text-align: center;
+}
+
+
+
+
+
+
+
+/* LOGIN */
+
+.Login {
+    padding: 4%;
+}
+
+.Login h1 {
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 69px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.Login h2 {
+    font-weight: 500;
+    font-size: 32px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.Login h3 {
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 33px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.Login h4 {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.Login #logo {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 36px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.Login input {
+    width: 100%;
+    display: block;
+    padding: 2%;
+    margin: 1%;
+    border-radius: 300px;
+    border-color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    text-align: center;
+}
+
+.Login .btn {
+    padding: 2%;
+}
+
+
+#side-img {
+    width: 100%;
+}
+
+#introTxt {
+    margin: 6%;
+}
+
+
+
+
+
+
+
+
+/* INVALID LOGIN */
+
+.InvalidLogin {
+    padding: 4%;
+}
+
+.InvalidLogin h1 {
+    font-weight: 400;
+    font-size: 46px;
+    line-height: 69px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.InvalidLogin h2 {
+    font-weight: 400;
+    font-size: 32px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+  }
+
+.InvalidLogin h3 {
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 33px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.InvalidLogin h4 {
+    font-weight: 400;
+    font-size: 20px;
+    line-height: 30px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.InvalidLogin p {
+    font-weight: 400;
+    font-size: 16px;
+    line-height: 26px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+.InvalidLogin #logo {
+    font-weight: 400;
+    font-size: 24px;
+    line-height: 36px;
+    font-family: 'Poppins', sans-serif;
+    color: black;
+}
+
+@media (min-width: 1200px) {
+    .InvalidLogin .container {
+      width: 600px;
+    }
+}
+
+.InvalidLogin input {
+    width: 100%;
+    display: block;
+    padding: 2%;
+    margin: 1%;
+    border-radius: 300px;
+    border-color: black;
+    font-family: 'Poppins', sans-serif;
+    font-size: 20px;
+    text-align: center;
+}
+
+.InvalidLogin .btn {
+    padding: 2%;
+}
+
+
+.InvalidLogin .card {
+    padding: 1%;
+    background-color: #FFB6B6;
+    border-radius: 20px;
+    outline-color: none;
+    margin-bottom: 4%;
+}
