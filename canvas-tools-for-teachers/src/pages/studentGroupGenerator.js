@@ -37,6 +37,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import Snackbar from '@mui/material/Snackbar';
 import Alert from '@mui/material/Alert';
 
+import Papa from "papaparse";
+
 
 function StudentGroupGenerator(){
     const [courses, setCourses] = useState([]);
@@ -54,8 +56,8 @@ function StudentGroupGenerator(){
     const [refreshToggle, setRefreshToggle] = useState(true);
     const [expandAll, setExpandAll] = useState(true);
 
-    const [gmodalOpen, setGmodalOpen] = useState(false);
-    const [smodalOpen, setSmodalOpen] = useState(false);
+    const [gmodalOpen, setGmodalOpen] = useState(false); //new group modal
+    const [smodalOpen, setSmodalOpen] = useState(false); //add student modal
 
     const [newGroupName, setNewGroupName] = useState();
     const [nameError, setNameError] = useState(false);
@@ -78,6 +80,59 @@ function StudentGroupGenerator(){
         p: 4,
       };
 
+    // 2022 new styling for csv upload
+
+    // ***************************************
+    const [csvmodalOpen, setCSVmodalOpen] = useState(false); //csv import modal
+    const [importedCsvFileInJSON, setParsedCSVFile] = useState(null);
+
+    const uploadCSVStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 500,
+        height: 300,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        borderRadius: '5px',
+        p: 4,
+    };
+
+    const handleFileUploadChange = (e) => {
+        
+            let file = e.target.files[0];
+            //console.log('file type is: ', file.type);
+            // check csv
+            if (file.type === 'application/vnd.ms-excel' || file.type === 'text/csv') { 
+                console.log(file);
+                if (file) {
+                    Papa.parse(file, {
+                        header: true,
+                        complete: results => {
+                                                console.log('result:', results.data);
+                                                setParsedCSVFile(results.data);
+                                            }
+                    });
+                }
+            }
+        
+    }
+
+    const handleUploadCSV = () => {
+        if (importedCsvFileInJSON === null) {window.alert('Upload a file!'); return;}
+        console.log(importedCsvFileInJSON);
+        setParsedCSVFile(null);
+        setCSVmodalOpen(false);
+    }
+
+
+    const handleCSVmodalClose = () => {
+        setCSVmodalOpen(false);
+    }
+
+    // ***************************************
+
     //Fetch all courses for the logged user
     useEffect(() => {
       let courseBody;
@@ -90,9 +145,9 @@ function StudentGroupGenerator(){
             }
           })
         courseBody = await cResponse.json()
-        parseCourses(courseBody)
+        parseCourses(courseBody);
         }
-      getCourseBody()
+      getCourseBody();
     }, [])  
 
     //Fetch all groups in a given course
@@ -283,6 +338,10 @@ function StudentGroupGenerator(){
         setSmodalOpen(false)
     }
 
+    
+
+
+
     //TODO: Add appropriate POST request in backend
     const handleNewGroupSubmit = (e) =>{
         e.preventDefault()
@@ -310,6 +369,8 @@ function StudentGroupGenerator(){
         setAlertMsg(alertMsg);
         setOpenAlert(true);
     }
+
+    
 
     const handleAlertClose = (event, reason) => {
         if (reason === 'clickaway') {
@@ -408,7 +469,8 @@ function StudentGroupGenerator(){
                         {expandAll? <UnfoldLessIcon></UnfoldLessIcon>: <UnfoldMoreIcon></UnfoldMoreIcon>}{expandAll? 'Collapse All': 'Expand All'}
                     </Button>
                     {/*TODO: add functionality, Button to upload CSV file for group creation */}
-                    <Button size="small" style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">Import CSV</Button>
+                    <Button size="small" onClick={()=>{setCSVmodalOpen(true)}} style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">Import CSV</Button>
+                    
                     <Button size="small" style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">
                         {exportData===undefined?
                             <div>EXPORT ALL AS CSV</div>
@@ -422,6 +484,7 @@ function StudentGroupGenerator(){
                 </div>
                 
                 {/* Modal when creating new group */}
+                
                 <Modal
                     open={gmodalOpen}
                     onClose={()=>{setNameError(false)
@@ -565,6 +628,69 @@ function StudentGroupGenerator(){
                     <Button size="small" disabled={disableAddButton} onClick={handleAddStudents} style={{padding:'8px', float: 'right', outline:'none'}} variant="contained">Add</Button>
                     </Box>
                 </Modal>
+                
+                
+                
+                
+                
+                
+                
+                
+                
+                {/* Modal For Uploading Student Groups With CSV */}
+                <Modal 
+                    open={csvmodalOpen}
+                    onClose={handleCSVmodalClose}
+                    aria-labelledby="modal-import-csv"
+                    aria-describedby="modal-upload-csv-class-groups" 
+                >
+                    <Box sx={uploadCSVStyle} style={{backgroundColor: "#E4D4D1"}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <h2 style={{color: 'black', marginTop: '-10px'}}> CSV </h2>
+                            <h2 style={{color: 'red', marginTop: '-10px', marginLeft: '-215px'}}> Upload</h2>
+                            <button style={{background: 'none', border: 'none', padding: '0', outline: 'inherit'}}onClick={()=>{setCSVmodalOpen(false)}}>
+                                <CloseIcon></CloseIcon>
+                            </button>
+                        </div>
+                        
+                        
+                        <div style={{height: '150px', marginTop: '-15px', backgroundColor: "#FFFFFF"}}>
+                            <p style={{marginTop: '30px', marginLeft: '10px'}}> Upload CSV file Here </p>
+                            <label style={{marginLeft: '10px'}}>
+                                <input 
+                                type="file"
+                                accept=".xlsx,.csv"
+                                onChange={handleFileUploadChange}
+                                required
+                                />
+                            </label>
+                        </div>
+                        <Button size="small" type="submit" style={{padding:'8px', marginTop: '10px', float: 'right', outline:'none'}} variant="contained" onClick={handleUploadCSV}>Upload</Button> 
+                    </Box>
+                    
+                </Modal>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
                 {/* Success alert/toast */}
                 <Snackbar open={openAlert} autoHideDuration={3000} onClose={handleAlertClose}>
