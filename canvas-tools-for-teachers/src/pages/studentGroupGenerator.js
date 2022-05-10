@@ -84,7 +84,10 @@ function StudentGroupGenerator(){
 
     // ***************************************
     const [csvmodalOpen, setCSVmodalOpen] = useState(false); //csv import modal
-    const [importedCsvFileInJSON, setParsedCSVFile] = useState(null);
+    const [importedCsvFileInJSON, setParsedCSVFile] = useState([]);
+
+    const [tempModalOpen, setTempModal] = useState(false);
+    const [verifyGroup, setVerifyGroups] = useState([]);
 
     const uploadCSVStyle = {
         position: 'absolute',
@@ -93,6 +96,19 @@ function StudentGroupGenerator(){
         transform: 'translate(-50%, -50%)',
         width: 500,
         height: 300,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        borderRadius: '5px',
+        p: 4,
+    };
+
+    const verificationModalStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 600,
+        height: 1000,
         bgcolor: 'background.paper',
         boxShadow: 24,
         borderRadius: '5px',
@@ -121,15 +137,58 @@ function StudentGroupGenerator(){
 
     const handleUploadCSV = () => {
         if (importedCsvFileInJSON === null) {window.alert('Upload a file!'); return;}
-        console.log(importedCsvFileInJSON);
+        //console.log(importedCsvFileInJSON);
         setParsedCSVFile(null);
-        setCSVmodalOpen(false);
+        setCSVmodalOpen(false); // change to opening up another tab displaying groups to be made
     }
 
 
     const handleCSVmodalClose = () => {
         setCSVmodalOpen(false);
     }
+
+    const handleTempModalClose = () => {
+        setTempModal(false);
+    }
+
+    const handleVerifyCSVformat = () => {
+        if (importedCsvFileInJSON == []) {
+            setCSVmodalOpen(false);
+            window.alert("CSV File Headers Are Not Accepted");
+        }
+        else {
+            setCSVmodalOpen(false);
+            setTempModal(true);
+        }
+    }
+
+    const parseVerify = (jsonFile) => {
+        let parsed = []
+        let students = []
+        let lastGroup = ""
+        
+        for(let i = 0; i < jsonFile.length; i++){
+            let item = jsonFile[i]
+            if (lastGroup == "") {
+                students.push({"student name" : item["student name"], "student id" : item["student id"]})
+                lastGroup = item["group"]
+            }
+            else if (item["group"] == lastGroup) {
+                students.push({"student name" : item["student name"], "student id" : item["student id"]})
+            }
+            else if (item["group"] !== lastGroup) {
+                parsed.push({"group": lastGroup, "students" : students})
+                lastGroup = item["group"]
+                students = []
+            }
+            else {
+            }  
+        }
+        parsed.push({"group": lastGroup, "students" : students})
+        
+        console.log(parsed);
+        setVerifyGroups(parsed);
+      }
 
     // ***************************************
 
@@ -228,6 +287,7 @@ function StudentGroupGenerator(){
       }
       setGroups(parsed)
       createExportData(parsed);
+      console.log(groups);
     }
 
     const parseStudents = (studentBody) => {
@@ -239,6 +299,7 @@ function StudentGroupGenerator(){
             }
         }
         setStudents(parsed)
+        console.log(students);
     }
 
     // Function returning expandable portion of Table
@@ -665,10 +726,64 @@ function StudentGroupGenerator(){
                                 />
                             </label>
                         </div>
-                        <Button size="small" type="submit" style={{padding:'8px', marginTop: '10px', float: 'right', outline:'none'}} variant="contained" onClick={handleUploadCSV}>Upload</Button> 
+                        <Button size="small" type="submit" style={{padding:'8px', marginTop: '10px', float: 'right', outline:'none'}} variant="contained" onClick={()=>{handleVerifyCSVformat(); console.log(JSON.stringify(importedCsvFileInJSON)); parseVerify(importedCsvFileInJSON)}}>Upload</Button> 
                     </Box>
                     
                 </Modal>
+
+                {/* Temporary Verification Modal */}
+
+                <Modal
+                    open={tempModalOpen}
+                    onClose={handleTempModalClose}
+                    aria-labelledby="modal-import-csv"
+                    aria-describedby="modal-upload-csv-class-groups" 
+                    >
+                        <Box sx={verificationModalStyle} style={{backgroundColor: "#E4D4D1", overflowY: "scroll"}}>
+                            <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                <b style={{color: 'black', marginTop: '-10px'}}> VERIFY GROUP ASSIGNMENT </b>
+                                <button style={{background: 'none', border: 'none', padding: '0', outline: 'inherit'}}onClick={()=>{setTempModal(false)}}>
+                                    <CloseIcon></CloseIcon>
+                                </button>
+                            </div>
+                            <div style={{marginInline: '40px'}}>
+                                <i> The following is the result of importing your CSV file, please confirm</i>
+                            </div>
+                            <div style={{marginTop: '25px'}}> 
+                                { 
+                                verifyGroup.map(post => {
+                                    return( <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                                        <b style={{color:"red", marginLeft: '-10px', }}>{ post.group }</b>
+                                        <Table size="small" aria-label="students" style={{marginLeft: '25px'}}>
+                                            <TableHead>
+                                                <TableRow style={{backgroundColor: "#AB194D"}}>
+                                                    <TableCell>
+                                                        <Typography style={{ color: "white", fontSize: "12px"}}>STUDENT NAME</Typography>
+                                                    </TableCell>
+                                                    <TableCell>
+                                                        <Typography style={{ color: "white", fontSize: "12px"}}>STUDENT ID</Typography>
+                                                    </TableCell>
+                                                </TableRow>
+                                            </TableHead>
+                                            <TableBody>
+                                            {post.students.map((student) => (
+                                                <TableRow key={student["student id"]}>
+                                                    <TableCell>{student["student name"]}</TableCell>
+                                                    <TableCell>{student["student id"]}</TableCell>
+                                                </TableRow>
+                                            ))}
+                                            </TableBody>
+                                        </Table>
+                                        </div>
+                                    )
+                                }) 
+                                }
+                            </div>
+                            <Button size="small" type="submit" style={{padding:'8px', marginLeft: '225px', float: 'none', outline:'none'}} variant="contained" onClick={()=>{setTempModal(false)}}>Confirm</Button> 
+                        </Box>
+                </Modal>
+
+
 
 
 
