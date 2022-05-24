@@ -8,6 +8,8 @@ var cors = require("cors");
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var canvasAPIRouter = require("./routes/canvasAPI");
+
+
 var app = express();
 
 // view engine setup
@@ -25,9 +27,12 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use("/canvasAPI", canvasAPIRouter);
+
+
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
   next(createError(404));
+  return res.status(404).json();
 });
 
 // error handler

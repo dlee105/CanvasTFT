@@ -89,6 +89,11 @@ function StudentGroupGenerator(){
     const [tempModalOpen, setTempModal] = useState(false);
     const [verifyGroup, setVerifyGroups] = useState([]);
 
+    const [groupSetInputOpen, setGroupSetModal] = useState(false);
+    const [groupSets, setGroupSets] = useState([]);
+    const [groupSetID, setGroupSetID] = useState(null);
+    const [groupSetName, setNewGroupSetName] = useState();
+
     const uploadCSVStyle = {
         position: 'absolute',
         top: '50%',
@@ -114,6 +119,20 @@ function StudentGroupGenerator(){
         borderRadius: '5px',
         p: 4,
     };
+
+    const groupSetNameModalStyle = {
+        position: 'absolute',
+        top: '50%',
+        left: '50%',
+        transform: 'translate(-50%, -50%)',
+        width: 500,
+        height: 250,
+        bgcolor: 'background.paper',
+        boxShadow: 24,
+        borderRadius: '5px',
+        p: 4,
+    };
+
 
     const handleFileUploadChange = (e) => {
         
@@ -143,6 +162,10 @@ function StudentGroupGenerator(){
     }
 
 
+
+
+
+    // CLOSING MODALS
     const handleCSVmodalClose = () => {
         setCSVmodalOpen(false);
     }
@@ -150,6 +173,14 @@ function StudentGroupGenerator(){
     const handleTempModalClose = () => {
         setTempModal(false);
     }
+
+    const handleGroupSetModalClose = () => {
+        setGroupSetModal(false);
+    }
+    // ********************************
+
+
+
 
     const handleVerifyCSVformat = () => {
         if (importedCsvFileInJSON == []) {
@@ -192,6 +223,47 @@ function StudentGroupGenerator(){
 
     // ***************************************
 
+    // API rework
+    const handleNewGroupSetSubmit = (e) =>{
+        e.preventDefault()
+        if (groupSetName === undefined || groupSetName.length < 1) {
+            setNameErrorMsg('please enter a group name');
+            setNameError(true);
+        } else if (groupSetName.length > 255) {
+            setNameErrorMsg('please enter a valid name under 255 characters');
+            setNameError(true);
+        } else if (selectedCourseId === undefined) {
+            setNameErrorMsg('please select a course');
+            setNameError(true);
+        } else {
+            //post function needs fixing
+            postGroupSet(selectedCourseId);
+            setGroupSetModal(false);
+            handleAlertOpen('Group Set successfully created');
+        }
+    }
+
+
+    const postGroupSet =  () => {
+        let postNewGroupSetRes;
+        const postNewGroupSet = async () => {
+            const pngsResponse = await fetch(`http://localhost:9000/canvasAPI/newgroupCategory?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}`, 
+                {
+                    method: "post",
+                    header: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
+                    },
+                    body: JSON.stringify({'name': groupSetName})
+                }
+            )
+            postNewGroupSetRes = await pngsResponse.json();
+        }
+        postNewGroupSet();
+        console.log(postNewGroupSetRes);
+    }
+
+
     //Fetch all courses for the logged user
     useEffect(() => {
       let courseBody;
@@ -209,17 +281,20 @@ function StudentGroupGenerator(){
       getCourseBody();
     }, [])  
 
+    
+
     //Fetch all groups in a given course
     useEffect(() => {
-      let groupBody; 
-      const getGroupBody = async () => {
-        const gResponse = await fetch(`http://localhost:9000/canvasAPI/groups?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}` ,{
-            method: "get",
-            headers: {
-                'Content-Type': 'application/json',
-                'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
-             }
-           })
+        let groupBody; 
+        const getGroupBody = async () => {
+            const gResponse = await fetch(`http://localhost:9000/canvasAPI/groups?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}` ,
+            {
+                method: "get",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
+                         }
+            })
         groupBody = await gResponse.json()
         parseGroups(groupBody);
       }
@@ -245,6 +320,25 @@ function StudentGroupGenerator(){
         if (selectedCourseId !== undefined){
             getStudentBody();
         }
+    }, [selectedCourseId])
+    
+    useEffect(() => {
+        let getGroupSetResponse;
+        const getGroupSetBody = async () => {
+            const pgsResponse = await fetch(`http://localhost:9000/canvasAPI/groupCategory?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}` ,
+            {
+                method: "get",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
+                         }
+                //body: JSON.stringify({'course_id': selectedCourseId, 'name': groupSetName, 'self_signup': "restricted"})
+            })
+            getGroupSetResponse = await pgsResponse.json()
+            console.log('Group Sets:', getGroupSetResponse);
+        }
+        getGroupSetBody();
+    
     }, [selectedCourseId])
 
     const createExportData = (data) => {
@@ -404,6 +498,9 @@ function StudentGroupGenerator(){
 
 
     //TODO: Add appropriate POST request in backend
+
+
+
     const handleNewGroupSubmit = (e) =>{
         e.preventDefault()
         if (newGroupName === undefined || newGroupName.length < 1) {
@@ -530,7 +627,7 @@ function StudentGroupGenerator(){
                         {expandAll? <UnfoldLessIcon></UnfoldLessIcon>: <UnfoldMoreIcon></UnfoldMoreIcon>}{expandAll? 'Collapse All': 'Expand All'}
                     </Button>
                     {/*TODO: add functionality, Button to upload CSV file for group creation */}
-                    <Button size="small" onClick={()=>{setCSVmodalOpen(true)}} style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">Import CSV</Button>
+                    <Button id="importBtn" size="small" onClick={()=>{setCSVmodalOpen(true)}} style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">Import CSV</Button>
                     
                     <Button size="small" style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">
                         {exportData===undefined?
@@ -541,7 +638,6 @@ function StudentGroupGenerator(){
                             </CsvDownload>
                         }
                     </Button>
-                    
                 </div>
                 
                 {/* Modal when creating new group */}
@@ -690,14 +786,6 @@ function StudentGroupGenerator(){
                     </Box>
                 </Modal>
                 
-                
-                
-                
-                
-                
-                
-                
-                
                 {/* Modal For Uploading Student Groups With CSV */}
                 <Modal 
                     open={csvmodalOpen}
@@ -779,13 +867,61 @@ function StudentGroupGenerator(){
                                 }) 
                                 }
                             </div>
-                            <Button size="small" type="submit" style={{padding:'8px', marginLeft: '225px', float: 'none', outline:'none'}} variant="contained" onClick={()=>{setTempModal(false)}}>Confirm</Button> 
+                            <div>
+                            <Button size="small" type="submit" style={{padding:'8px', marginRight: '340px', float: 'none', outline:'none'}} variant="contained" onClick={()=>{setTempModal(false)}}>Cancel</Button> 
+                            <Button size="small" type="button" style={{padding:'8px', marginRight: '20px', float: 'none', outline:'none'}} variant="contained" onClick={()=>{setGroupSetModal(true); setTempModal(false)}}>Confirm</Button> 
+                            </div>
                         </Box>
+                </Modal>
+                
+                <Modal
+                    open={groupSetInputOpen}
+                    onClose={handleGroupSetModalClose}
+                    aria-labelledby="modal-import-csv"
+                    aria-describedby="modal-upload-csv-class-groups" 
+                    >
+                    <Box sx={groupSetNameModalStyle} style={{backgroundColor: "#FFFFFF"}}>
+                        <div style={{display: 'flex', justifyContent: 'space-between'}}>
+                            <Typography id="modalAddStudent" variant="h6" component="h2">
+                            Create New Group Set
+                            </Typography>
+                            <button style={{background: 'none', border: 'none', padding: '0', outline: 'inherit'}}onClick={()=>{setGroupSetModal(false)}}>
+                                <CloseIcon></CloseIcon>
+                            </button>
+                        </div>
+                        <form noValidate autoComplete="off" onSubmit={handleNewGroupSetSubmit}>
+                            <div style={{height: '100px', marginTop: '10px'}}>
+                                {/* Input for name of new group set */}
+                                <TextField 
+                                    fullWidth
+                                    required
+                                    error={nameError}
+                                    margin="normal" 
+                                    size="small" 
+                                    id="groupname-field"
+                                    label="Group Set Name" 
+                                    variant="outlined"
+                                    helperText={nameError? nameErrorMsg : ""}
+                                    onChange={(e) => {setNameError(false)
+                                                    setNewGroupSetName(e.target.value)}}
+                                />
+
+                              
+                                
+                                </div>
+
+                                <Button size="small" type="submit" style={{padding:'8px', float: 'right', outline:'none'}} variant="contained"  >Set Name</Button>                               
+                        </form>
+
+                    </Box>
+                        
                 </Modal>
 
 
 
+                
 
+                        
 
 
 
