@@ -55,6 +55,7 @@ function StudentGroupGenerator(){
 
     const [refreshToggle, setRefreshToggle] = useState(true);
     const [expandAll, setExpandAll] = useState(true);
+    const [disableButtons, setDisableButtons] = useState(true);
 
     const [gmodalOpen, setGmodalOpen] = useState(false); //new group modal
     const [smodalOpen, setSmodalOpen] = useState(false); //add student modal
@@ -578,6 +579,9 @@ function StudentGroupGenerator(){
                                     onChange = {(event, value) =>{
                                                         if (value !== null){
                                                             setSelectedCourseId(value.value)
+                                                            setDisableButtons(false)
+                                                        }else{
+                                                            setDisableButtons(true)
                                                         }
                                                         setRefreshToggle(!refreshToggle)
                                                         setSelectedGroupId() }} />
@@ -623,13 +627,13 @@ function StudentGroupGenerator(){
                 </div>
 
                 <div style={{display: 'flex', justifyContent: 'flex-end', marginBottom:'20px'}}>
-                    <Button size="small" onClick={()=>{setExpandAll(!expandAll)}} style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">
+                    <Button disabled={disableButtons} size="small"  onClick={()=>{setExpandAll(!expandAll)}} style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">
                         {expandAll? <UnfoldLessIcon></UnfoldLessIcon>: <UnfoldMoreIcon></UnfoldMoreIcon>}{expandAll? 'Collapse All': 'Expand All'}
                     </Button>
                     {/*TODO: add functionality, Button to upload CSV file for group creation */}
-                    <Button id="importBtn" size="small" onClick={()=>{setCSVmodalOpen(true)}} style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">Import CSV</Button>
+                    <Button  disabled={disableButtons} id="importBtn" size="small" onClick={()=>{setCSVmodalOpen(true)}} style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">Import CSV</Button>
                     
-                    <Button size="small" style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">
+                    <Button  disabled={disableButtons} size="small" style={{ padding:'5px', margin: '0px 5px 0px 5px', outline:'none'}} variant="outlined">
                         {exportData===undefined?
                             <div>EXPORT ALL AS CSV</div>
                         :
