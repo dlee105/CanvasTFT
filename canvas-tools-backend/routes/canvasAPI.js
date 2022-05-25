@@ -165,6 +165,7 @@ router.get("/assignments", async (req, res, next) => {
     });
 
     router.get("/groupCategory", async (req, res, next) => {
+        console.log("api", req.headers['authorization'])
         let url = req.query.canvasURL
         let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
         
@@ -175,22 +176,22 @@ router.get("/assignments", async (req, res, next) => {
         res.send(response.data)
     });
 
-    router.post("/newgroupCategory", async (req, res, next) => {
+    router.post("/newgroupCategory", async (req, res, next) => {   
         
-
         let url = req.query.canvasURL
         let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
         const response =  await axios.post(`https://${parsed}/api/v1/courses/${req.query.id}/group_categories`,
         {
+            method: "post",
             headers: {'Content-Type': req.headers['content-type'], 'Authorization': req.headers['authorization']},
-            body: req.body
+            name: req.body
         });
         
         res.send(response.data)
     
     });
 
-   https://canvas.instructure.com:443/api/v1/courses/3737737/group_categories
+
     /*
     router.post("/groupCategory", async (req, res, next) => {
         let url = req.query.canvasURL

@@ -226,6 +226,7 @@ function StudentGroupGenerator(){
     // API rework
     const handleNewGroupSetSubmit = (e) =>{
         e.preventDefault()
+        console.log("Current Group Set name:", groupSetName)
         if (groupSetName === undefined || groupSetName.length < 1) {
             setNameErrorMsg('please enter a group name');
             setNameError(true);
@@ -247,7 +248,8 @@ function StudentGroupGenerator(){
     const postGroupSet =  () => {
         let postNewGroupSetRes;
         const postNewGroupSet = async () => {
-            const pngsResponse = await fetch(`http://localhost:9000/canvasAPI/newgroupCategory?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}`, 
+            console.log(`token: ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`);
+            const pngsResponse = await fetch(`http://localhost:9000/canvasAPI/groupCategory?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}`, 
                 {
                     method: "post",
                     header: {
