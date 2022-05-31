@@ -154,18 +154,9 @@ router.get("/assignments", async (req, res, next) => {
         res.send(response.data)
     });
 
-    router.post("/newGroup", async (req, res, next) => {
-        let url = req.query.canvasURL
-        let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
-        const response = await axios.post(`https://${parsed}/api/v1/groups`,
-        {
-            headers: {'Content-Type': req.headers['content-type'], 'Authorization': req.headers['authorization']}, body: req.body
-        });
-        res.send(response.data)
-    });
+   
 
     router.get("/groupCategory", async (req, res, next) => {
-        console.log("api", req.headers['authorization'])
         let url = req.query.canvasURL
         let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
         
@@ -176,20 +167,87 @@ router.get("/assignments", async (req, res, next) => {
         res.send(response.data)
     });
 
-    router.post("/newgroupCategory", async (req, res, next) => {   
+    router.post("/groupCategory", async (req, res, next) => {
+        let url = req.query.canvasURL
+        let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
+        
+        const response =  await axios(
+        {
+            method: "post",
+            url: `https://${parsed}/api/v1/courses/${req.query.id}/group_categories`,
+            data: req.body,
+            headers: {
+                'Content-Type': req.headers['content-type'], 
+                'Authorization': req.headers['authorization']},
+            
+        })
+        res.send(response.data)
+    });
+
+    router.post("/newGroup", async (req, res, next) => {
+        let url = req.query.canvasURL
+        let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
+       
+        const response =  await axios(
+            {
+                method: "post",
+                url: `https://${parsed}/api/v1/group_categories/${req.query.id}/groups
+                `,
+                data: req.body,
+                headers: {
+                    'Content-Type': req.headers['content-type'], 
+                    'Authorization': req.headers['authorization']},
+                
+            })
+            res.send(response.data)
+
+    });
+
+    router.get("/groups", async (req, res, next) => {
+        let url = req.query.canvasURL
+        let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
+        
+        const response =  await axios.get(`https://${parsed}/api/v1/group_categories/${req.query.id}/groups`,
+        {
+            headers: {'Content-Type': req.headers['content-type'], 'Authorization': req.headers['authorization']}
+        });
+        res.send(response.data)
+    });
+
+    router.post("/memberships", async (req, res, next) => {
+        let url = req.query.canvasURL
+        let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
+        const response =  await axios(
+            {
+                method: "post",
+                url: `https://${parsed}/api/v1/groups/${req.query.id}/memberships
+                `,
+                data: req.body,
+                headers: {
+                    'Content-Type': req.headers['content-type'], 
+                    'Authorization': req.headers['authorization']},
+                
+            })
+            res.send(response.data)
+    });
+
+    /*
+    router.post("/groupCategory", async (req, res, next) => {   
+        console.log('content type', req.headers['content-type'], "body", req.body, "api", req.headers['authorization'])
         
         let url = req.query.canvasURL
         let parsed = req.query.canvasURL.toString().substring(1, url.length-1)
+        console.log(url,"and", parsed)
+        
         const response =  await axios.post(`https://${parsed}/api/v1/courses/${req.query.id}/group_categories`,
         {
-            method: "post",
             headers: {'Content-Type': req.headers['content-type'], 'Authorization': req.headers['authorization']},
-            name: req.body
+            body: req.body
         });
         
         res.send(response.data)
     
-    });
+    });*/
 
 
     /*

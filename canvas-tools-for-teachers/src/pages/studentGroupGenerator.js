@@ -84,15 +84,22 @@ function StudentGroupGenerator(){
 
     // ***************************************
     const [csvmodalOpen, setCSVmodalOpen] = useState(false); //csv import modal
-    const [importedCsvFileInJSON, setParsedCSVFile] = useState([]);
+    const [importedCsvFileInJSON, setParsedCSVFile] = useState([]); // actual CSV data parsed as JSON **difficult to use**
 
     const [tempModalOpen, setTempModal] = useState(false);
-    const [verifyGroup, setVerifyGroups] = useState([]);
+    const [verifyGroup, setVerifyGroups] = useState([]); // easy to use/read JSON form of CSV file **use this over importedCsvFileInJSON**
 
     const [groupSetInputOpen, setGroupSetModal] = useState(false);
     const [groupSets, setGroupSets] = useState([]);
     const [groupSetID, setGroupSetID] = useState(null);
     const [groupSetName, setNewGroupSetName] = useState();
+
+    const setDefaultGroupSet = () => {
+        setGroupSetID(null);
+        setNewGroupName();
+    }
+
+    
 
     const uploadCSVStyle = {
         position: 'absolute',
@@ -238,32 +245,15 @@ function StudentGroupGenerator(){
             setNameError(true);
         } else {
             //post function needs fixing
-            postGroupSet(selectedCourseId);
+            console.log("group name", groupSetName);
+            postGroupSet();
             setGroupSetModal(false);
             handleAlertOpen('Group Set successfully created');
         }
     }
 
 
-    const postGroupSet =  () => {
-        let postNewGroupSetRes;
-        const postNewGroupSet = async () => {
-            console.log(`token: ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`);
-            const pngsResponse = await fetch(`http://localhost:9000/canvasAPI/groupCategory?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}`, 
-                {
-                    method: "post",
-                    header: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
-                    },
-                    body: JSON.stringify({'name': groupSetName})
-                }
-            )
-            postNewGroupSetRes = await pngsResponse.json();
-        }
-        postNewGroupSet();
-        console.log(postNewGroupSetRes);
-    }
+    
 
 
     //Fetch all courses for the logged user
@@ -327,7 +317,7 @@ function StudentGroupGenerator(){
     useEffect(() => {
         let getGroupSetResponse;
         const getGroupSetBody = async () => {
-            const pgsResponse = await fetch(`http://localhost:9000/canvasAPI/groupCategory?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}` ,
+            const ggsResponse = await fetch(`http://localhost:9000/canvasAPI/groupCategory?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}` ,
             {
                 method: "get",
                 headers: {
@@ -336,12 +326,104 @@ function StudentGroupGenerator(){
                          }
                 //body: JSON.stringify({'course_id': selectedCourseId, 'name': groupSetName, 'self_signup': "restricted"})
             })
-            getGroupSetResponse = await pgsResponse.json()
+            getGroupSetResponse = await ggsResponse.json()
             console.log('Group Sets:', getGroupSetResponse);
         }
         getGroupSetBody();
     
     }, [selectedCourseId])
+
+    useEffect(() => {
+        let getGroupsFromGroupSet;
+        const getGroupBody2 = async () => {
+            const ggResponse2 = await fetch(`http://localhost:9000/canvasAPI/groups?id=${groupSetID}&canvasURL=${sessionStorage.getItem('canvasURL')}` ,
+            {
+                method: "get",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
+                         }
+            })
+            getGroupsFromGroupSet = await ggResponse2.json()
+            console.log('Group Sets:', getGroupsFromGroupSet);
+        }
+        getGroupBody2();
+    
+    }, [groupSetID])
+
+    const postGroupSet = () => {
+        console.log("group name", groupSetName);
+        let getGroupSetResponse;
+        const getGroupSetBody = async () => {
+            const pgsResponse = await fetch(`http://localhost:9000/canvasAPI/groupCategory?id=${selectedCourseId}&canvasURL=${sessionStorage.getItem('canvasURL')}` ,
+            {
+                method: "post",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
+                         },
+                body: JSON.stringify({'course_id': selectedCourseId, 'name': groupSetName})
+            })
+            getGroupSetResponse = await pgsResponse.json();
+            handlePostingGroupToGroupSet(getGroupSetResponse.id);
+        }
+        getGroupSetBody();
+        
+        // ITERATION THROUGH VERIFIEDGROUP
+        setVerifyGroups([]);
+    }
+
+    const handlePostingGroupToGroupSet = (groupsetid) => {
+        for (var key in verifyGroup) {
+            postGroupToGroupSet(groupsetid, verifyGroup[key]['group'], verifyGroup[key]['students']);
+        }
+    }
+
+    const postGroupToGroupSet = (groupsetid, groupName, studentArray) => {
+        console.log('gn:', groupName, studentArray);
+        let postGroupResponse;
+        const postGroup = async () => {
+            const pgResponse = await fetch(`http://localhost:9000/canvasAPI/newGroup?id=${groupsetid}&canvasURL=${sessionStorage.getItem('canvasURL')}`,
+                {
+                method: "post",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
+                         },
+                body: JSON.stringify({'name': groupName, 'join_level': "parent_context_auto_join"})
+                })
+                postGroupResponse = await pgResponse.json();
+                
+                
+                
+                // API posting students inside the array for the current group
+                const currentGroupId = postGroupResponse["id"];
+                for (var s in studentArray){
+                    postStudentToGroups(currentGroupId, studentArray[s]['student id']);
+                }
+            }
+        postGroup();
+    }
+   
+    const postStudentToGroups = (groupID, user_id) => {
+        console.log("id", groupID, "user_id", user_id);
+        let postStudentResponse;
+        const postStudents = async () => {
+            const psResponse = await fetch(`http://localhost:9000/canvasAPI/memberships?id=${groupID}&canvasURL=${sessionStorage.getItem('canvasURL')}`,
+            {
+                method: "post",
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${sessionStorage.getItem('token').toString().substring(1, sessionStorage.getItem('token').length - 1)}`
+                         },
+                body: JSON.stringify({'user_id': user_id})
+                })
+            postStudentResponse = await psResponse.json();
+        }
+        postStudents();
+    }
+
+ 
 
     const createExportData = (data) => {
         let exportData = []
