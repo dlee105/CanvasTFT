@@ -208,24 +208,27 @@ function StudentGroupGenerator(){
         for(let i = 0; i < jsonFile.length; i++){
             let item = jsonFile[i]
             if (lastGroup == "") {
-                students.push({"student name" : item["student name"], "student id" : item["student id"]})
                 lastGroup = item["group"]
             }
-            else if (item["group"] == lastGroup) {
-                students.push({"student name" : item["student name"], "student id" : item["student id"]})
-            }
-            else if (item["group"] !== lastGroup) {
+            
+            else if (item["group"] != lastGroup) {
                 parsed.push({"group": lastGroup, "students" : students})
                 lastGroup = item["group"]
                 students = []
+                
             }
-            else {
-            }  
+            students.push({"student name" : item["student name"], "student id" : item["student id"]})
+            
+            
+            //console.log(item['student name'], item['group'], "result", students);
         }
         parsed.push({"group": lastGroup, "students" : students})
+        //console.log(parsed);
         
-        console.log(parsed);
+        
+        
         setVerifyGroups(parsed);
+
       }
 
     // ***************************************
